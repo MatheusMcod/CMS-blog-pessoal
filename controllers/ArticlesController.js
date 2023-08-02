@@ -20,10 +20,28 @@ class ArticlesController {
             res.json({erro: "Date cannot by empty!"});
         }
 
-        await Articles.registerArticle(title, content, date);
+        let statusOperation = await Articles.setArticle(title, content, date);
 
-        res.status(200);
-        res.send("Sucessfull");
+        if (statusOperation){
+            res.status(200);
+            res.send("Sucessfull!");
+        } else {
+            res.status(406);
+            res.send("Error!")
+        }
+    }
+
+    async findAllArticles(req, res) {
+        let articles = await Articles.getAllArticles();
+        
+        if(articles) {
+            res.status(200);
+            res.json({articles});
+        } else {
+            res.status(502);
+            res.send("Error!");
+        }
+
     }
 
 }
