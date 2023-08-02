@@ -7,5 +7,6 @@ const ArticlesController = require("../controllers/ArticlesController");
 router.get('/', HomeController.index);
 router.post('/article', ArticlesController.createArticle);
 router.get('/articles', ArticlesController.findAllArticles);
+router.get('/article', ArticlesController.findArticle);
 
 module.exports = router;

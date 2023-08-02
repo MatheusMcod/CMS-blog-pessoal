@@ -34,14 +34,41 @@ class ArticlesController {
     async findAllArticles(req, res) {
         let articles = await Articles.getAllArticles();
         
-        if(articles) {
+        if(articles != undefined) {
             res.status(200);
             res.json({articles});
         } else {
             res.status(502);
             res.send("Error!");
         }
+    }
 
+    async findArticle(req, res) {
+        let {title,id} = req.body;
+
+        if (id != undefined) {
+            let articleResult = await Articles.getArticlesById(id);
+            if (articleResult != false) {
+                res.status(200);
+                res.json(articleResult);
+            } else {
+                res.status(400);
+                res.send("Error!");
+            }
+        } else if (title != undefined) {
+            let articleResult = await Articles.getArticlesByTitle(title);
+            if (articleResult != false) {
+                res.status(200);
+                res.json(articleResult);
+            } else {
+                res.status(400);
+                res.send("Error!");
+            }
+        } else {
+            res.status(400);
+            res.send("Error!");
+        }
+            
     }
 
 }

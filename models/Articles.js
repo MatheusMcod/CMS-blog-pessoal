@@ -14,8 +14,36 @@ class Article {
 
     async getAllArticles() {
         try {
-            let articles = database.select().from('articles');
+            let articles = await database.select().from('articles');
             return articles;
+        } catch(erro) {
+            console.log(erro);
+            return false;
+        }
+    }
+
+    async getArticlesById(id) {
+        try {
+            let articleResult = await database('articles').select('*').where('id_article', id);
+            if (articleResult != undefined) {
+                return articleResult;
+            } else {
+                return false;
+            }
+        } catch(erro) {
+            console.log(erro);
+            return false;
+        }
+    }
+
+    async getArticlesByTitle(title) {
+        try {
+            let articleResult = await database('articles').select('*').where('title', title);
+            if (articleResult != undefined) {
+                return articleResult;
+            } else {
+                return false;
+            }
         } catch(erro) {
             console.log(erro);
             return false;
