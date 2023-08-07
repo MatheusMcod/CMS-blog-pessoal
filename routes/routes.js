@@ -7,6 +7,7 @@ const ArticlesController = require("../controllers/ArticlesController");
 router.get('/', HomeController.index);
 router.get('/articles', ArticlesController.findAllArticles);
 router.get('/article', ArticlesController.findArticle);
+router.put('/article', ArticlesController.editArticle);
 router.post('/article', ArticlesController.createArticle);
 router.delete('/article', ArticlesController.deleteArticle);
 

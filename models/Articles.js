@@ -22,7 +22,7 @@ class Article {
         }
     }
 
-    async getArticlesById(id) {
+    async getArticleById(id) {
         try {
             let articleResult = await database('articles').select('*').where('id_article', id);
             if (articleResult != undefined) {
@@ -36,7 +36,7 @@ class Article {
         }
     }
 
-    async getArticlesByTitle(title) {
+    async getArticleByTitle(title) {
         try {
             let articleResult = await database('articles').select('*').where('title', title);
             if (articleResult != undefined) {
@@ -51,7 +51,7 @@ class Article {
     }
 
     async deleteArticle(id) {
-        let articleResult = this.getArticlesById(id);
+        let articleResult = this.getArticleById(id);
 
         if (articleResult != false) {
             try {
@@ -61,8 +61,34 @@ class Article {
                 console.log(erro);
                 return false;
             }
-            
         }
+    }
+
+    async modifyArticle (id, title, content) {
+
+        let article = await this.getArticleById(id);
+        let articleEditingInformation = {};
+        if(article != undefined) {
+            if(title != article.title) {
+                articleEditingInformation.title = title;
+            }
+
+            if(content != article.content) {
+                articleEditingInformation.content = content;
+            }
+
+            try {
+                await database.update(articleEditingInformation).where('id_article', id).table('articles');
+                return true;
+            } catch(erro) {
+                console.log(erro);
+                return false;
+            }
+
+        } else {
+            return false;
+        }
+
     }
 
 }

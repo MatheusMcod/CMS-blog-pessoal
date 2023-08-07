@@ -47,7 +47,7 @@ class ArticlesController {
         let {title,id} = req.body;
 
         if (id != undefined) {
-            let articleResult = await Articles.getArticlesById(id);
+            let articleResult = await Articles.getArticleById(id);
             if (articleResult != false) {
                 res.status(200);
                 res.json(articleResult);
@@ -56,7 +56,7 @@ class ArticlesController {
                 res.send("Error!");
             }
         } else if (title != undefined) {
-            let articleResult = await Articles.getArticlesByTitle(title);
+            let articleResult = await Articles.getArticleByTitle(title);
             if (articleResult != false) {
                 res.status(200);
                 res.json(articleResult);
@@ -84,7 +84,16 @@ class ArticlesController {
     }
 
     async editArticle(req,res) {
-        
+        let {id, title, content} = req.body;
+        let status = await Articles.modifyArticle(id,title,content)
+
+        if(status) {
+            res.status(200);
+            res.send("Tudo OK!");
+        } else {
+            res.status(406);
+            res.send("Error!");
+        }
     }
 
 }
