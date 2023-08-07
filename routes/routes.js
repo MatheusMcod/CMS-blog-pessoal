@@ -5,8 +5,9 @@ const HomeController = require("../controllers/HomeController");
 const ArticlesController = require("../controllers/ArticlesController");
 
 router.get('/', HomeController.index);
-router.post('/article', ArticlesController.createArticle);
 router.get('/articles', ArticlesController.findAllArticles);
 router.get('/article', ArticlesController.findArticle);
+router.post('/article', ArticlesController.createArticle);
+router.delete('/article', ArticlesController.deleteArticle);
 
 module.exports = router;

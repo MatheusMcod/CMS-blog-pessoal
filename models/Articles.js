@@ -50,6 +50,21 @@ class Article {
         }
     }
 
+    async deleteArticle(id) {
+        let articleResult = this.getArticlesById(id);
+
+        if (articleResult != false) {
+            try {
+                await database.delete().where('id_article', id).table('articles');
+                return true;
+            } catch(erro) {
+                console.log(erro);
+                return false;
+            }
+            
+        }
+    }
+
 }
 
 module.exports = new Article();

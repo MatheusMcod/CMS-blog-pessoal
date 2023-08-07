@@ -24,7 +24,7 @@ class ArticlesController {
 
         if (statusOperation){
             res.status(200);
-            res.send("Sucessfull!");
+            res.send("Successful!");
         } else {
             res.status(406);
             res.send("Error!")
@@ -67,8 +67,24 @@ class ArticlesController {
         } else {
             res.status(400);
             res.send("Error!");
+        }    
+    }
+
+    async deleteArticle(req, res) {
+        let id = req.body.id;
+        let article = await Articles.deleteArticle(id);
+
+        if (article != false) {
+            res.status(200);
+            res.send("Successful!");
+        } else {
+            res.status(400);
+            res.send("Error!");
         }
-            
+    }
+
+    async editArticle(req,res) {
+        
     }
 
 }
