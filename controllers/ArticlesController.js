@@ -22,24 +22,26 @@ class ArticlesController {
 
         let statusOperation = await Articles.setArticle(title, content, date);
 
-        if (statusOperation){
+        if (statusOperation.status){
             res.status(200);
             res.send("Successful!");
         } else {
+            console.error(statusOperation.erro);
             res.status(406);
-            res.send("Error!")
+            res.send("Error creating article!");
         }
     }
 
     async findAllArticles(req, res) {
-        let articles = await Articles.getAllArticles();
+        let articlesResult = await Articles.getAllArticles();
         
-        if(articles != undefined) {
+        if(articlesResult.articles != undefined) {
             res.status(200);
-            res.json({articles});
+            res.send(articlesResult.articles);
         } else {
             res.status(502);
-            res.send("Error!");
+            console.error(articlesResult.erro);
+            res.send("Error in search of articles!");
         }
     }
 
@@ -48,51 +50,54 @@ class ArticlesController {
 
         if (id != undefined) {
             let articleResult = await Articles.getArticleById(id);
-            if (articleResult != false) {
+            if (articleResult.status) {
                 res.status(200);
-                res.json(articleResult);
+                res.send(articleResult.article);
             } else {
                 res.status(400);
-                res.send("Error!");
+                res.send("Error. Article not found!");
             }
         } else if (title != undefined) {
             let articleResult = await Articles.getArticleByTitle(title);
-            if (articleResult != false) {
+            if (articleResult.status) {
                 res.status(200);
-                res.json(articleResult);
+                res.send(articleResult.article);
             } else {
                 res.status(400);
-                res.send("Error!");
+                res.send("Error. Article not found!");
             }
         } else {
             res.status(400);
-            res.send("Error!");
+            console.error(articleResult.erro);
+            res.send("Error in search of article!");
         }    
     }
 
     async deleteArticle(req, res) {
         let id = req.body.id;
-        let article = await Articles.deleteArticle(id);
+        let statusOperation = await Articles.deleteArticle(id);
 
-        if (article != false) {
+        if (statusOperation.status) {
             res.status(200);
             res.send("Successful!");
         } else {
             res.status(400);
-            res.send("Error!");
+            console.error(statusOperation.erro);
+            res.send("Error deleting article! " + statusOperation.erro);
         }
     }
 
     async editArticle(req,res) {
         let {id, title, content} = req.body;
-        let status = await Articles.modifyArticle(id,title,content)
+        let statusOperation = await Articles.modifyArticle(id,title,content);
 
-        if(status) {
+        if(statusOperation.status) {
             res.status(200);
-            res.send("Tudo OK!");
+            res.send("Sucessful!");
         } else {
+            console.error(statusOperation.erro);
             res.status(406);
-            res.send("Error!");
+            res.send("Error!" + statusOperation.erro);
         }
     }
 

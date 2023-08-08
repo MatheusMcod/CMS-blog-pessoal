@@ -5,20 +5,18 @@ class Article {
     async setArticle(title, content, date) {
         try {
             await database('articles').insert({title:title, content:content, date_publication:date});
-            return true;
+            return {status: true};
         } catch(erro) {
-            console.log(erro);
-            return false;
+            return {status: false, erro: erro};
         }
     }
 
     async getAllArticles() {
         try {
             let articles = await database.select().from('articles');
-            return articles;
+            return ({status: true, articles: articles});
         } catch(erro) {
-            console.log(erro);
-            return false;
+            return ({status: false, erro: erro});
         }
     }
 
@@ -26,13 +24,12 @@ class Article {
         try {
             let articleResult = await database('articles').select('*').where('id_article', id);
             if (articleResult != undefined) {
-                return articleResult;
+                return ({status: true, article: articleResult});
             } else {
-                return false;
+                return ({status: false});
             }
         } catch(erro) {
-            console.log(erro);
-            return false;
+            return ({status: false, erro: erro});
         }
     }
 
@@ -40,32 +37,31 @@ class Article {
         try {
             let articleResult = await database('articles').select('*').where('title', title);
             if (articleResult != undefined) {
-                return articleResult;
+                return ({status: true, article: articleResult});
             } else {
-                return false;
+                return ({status: false});
             }
         } catch(erro) {
-            console.log(erro);
-            return false;
+            return ({status: false, erro: erro});
         }
     }
 
     async deleteArticle(id) {
         let articleResult = this.getArticleById(id);
 
-        if (articleResult != false) {
+        if (articleResult.status) {
             try {
                 await database.delete().where('id_article', id).table('articles');
-                return true;
+                return ({status: true});
             } catch(erro) {
-                console.log(erro);
-                return false;
+                return ({status: false, erro: erro});
             }
+        } else {
+            return ({status: false, erro: "Article not found!"})
         }
     }
 
     async modifyArticle (id, title, content) {
-
         let article = await this.getArticleById(id);
         let articleEditingInformation = {};
         if(article != undefined) {
@@ -79,14 +75,13 @@ class Article {
 
             try {
                 await database.update(articleEditingInformation).where('id_article', id).table('articles');
-                return true;
+                return ({status:true});
             } catch(erro) {
-                console.log(erro);
-                return false;
+                return ({status: false, erro: erro});
             }
 
         } else {
-            return false;
+            return ({status: false, erro: "Article not found!"});
         }
 
     }
