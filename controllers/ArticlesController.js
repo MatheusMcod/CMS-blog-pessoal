@@ -93,7 +93,7 @@ class ArticlesController {
 
         if(statusOperation.status) {
             res.status(200);
-            res.send("Sucessful!");
+            res.send("Successful!");
         } else {
             console.error(statusOperation.erro);
             res.status(406);

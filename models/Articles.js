@@ -1,10 +1,11 @@
 const database = require("../database/connection");
+const slug = require("slugify");
 
 class Article {
 
     async setArticle(title, content, date) {
         try {
-            await database('articles').insert({title:title, content:content, date_publication:date});
+            await database('articles').insert({title:title, content:content, date_publication:date, slug: slug(title)});
             return {status: true};
         } catch(erro) {
             return {status: false, erro: erro};
