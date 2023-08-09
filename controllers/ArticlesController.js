@@ -3,7 +3,7 @@ const Articles = require("../models/Articles");
 class ArticlesController {
     
     async createArticle(req, res) {
-        let {title, content, date} = req.body;
+        const {title, content, date, categories} = req.body;
 
         if (title == undefined || title == '' || title == ' ') {
             res.status(406);
@@ -20,7 +20,12 @@ class ArticlesController {
             res.json({erro: "Date cannot by empty!"});
         }
 
-        let statusOperation = await Articles.setArticle(title, content, date);
+        if (categories == undefined || categories.length == 0) {
+            res.status(406);
+            res.json({erro: "Unassigned category!"});
+        }
+
+        let statusOperation = await Articles.setArticle(title, content, date, categories);
 
         if (statusOperation.status){
             res.status(200);

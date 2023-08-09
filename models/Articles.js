@@ -3,10 +3,23 @@ const slug = require("slugify");
 
 class Article {
 
-    async setArticle(title, content, date) {
+    async setArticle(title, content, date, categories) {
         try {
-            await database('articles').insert({title:title, content:content, date_publication:date, slug: slug(title)});
+            await database.transaction(async trans => {
+
+               const [id_article] = await database('articles').insert({title:title, content:content, date_publication:date, slug: slug(title)});
+            
+               let categoriesIds = categories.map(category => category.id);
+               await database('articlescategories').insert(categoriesIds.map(id_category => ({
+                    id_articles: id_article,
+                    id_categories: id_category,
+                    creation: date
+                }))
+            );
+        });
+            
             return {status: true};
+
         } catch(erro) {
             return {status: false, erro: erro};
         }
