@@ -4,8 +4,8 @@ const Categories = require("../models/Categories");
 class categoriesController {
 
     async createCategory(req, res) {
-        let {nameCategory, date_publication} = req.body;
-        let statusOperation = await Categories.setCategory(nameCategory, date_publication);
+        const {nameCategory, date_publication} = req.body;
+        const statusOperation = await Categories.setCategory(nameCategory, date_publication);
 
         if (nameCategory == undefined || nameCategory == '' || nameCategory == ' ') {
             res.status(406);
@@ -24,6 +24,19 @@ class categoriesController {
             res.status(406);
             console.error(statusOperation.erro)
             res.send("Error creating article!");
+        }
+    }
+
+    async findAllCategories(req, res) {
+        const categoriesResult = await Categories.getAllCategories();
+
+        if(categoriesResult.categories){
+            res.status(200);
+            res.send(categoriesResult.categories)
+        } else {
+            res.status(502);
+            console.error(categoriesResult.erro);
+            res.send("Error in search of articles!");
         }
     }
 

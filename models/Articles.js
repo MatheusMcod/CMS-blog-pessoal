@@ -27,7 +27,7 @@ class Article {
 
     async getAllArticles() {
         try {
-            let articles = await database.select().from('articles');
+            const articles = await database.select().from('articles');
             return ({status: true, articles: articles});
         } catch(erro) {
             return ({status: false, erro: erro});
@@ -36,7 +36,7 @@ class Article {
 
     async getArticleById(id) {
         try {
-            let articleResult = await database('articles').select('*').where('id_article', id);
+            const articleResult = await database('articles').select('*').where('id_article', id);
             if (articleResult != undefined) {
                 return ({status: true, article: articleResult});
             } else {
@@ -49,7 +49,7 @@ class Article {
 
     async getArticleByTitle(title) {
         try {
-            let articleResult = await database('articles').select('*').where('title', title);
+            const articleResult = await database('articles').select('*').where('title', title);
             if (articleResult != undefined) {
                 return ({status: true, article: articleResult});
             } else {
@@ -61,7 +61,7 @@ class Article {
     }
 
     async deleteArticle(id) {
-        let articleResult = this.getArticleById(id);
+        const articleResult = this.getArticleById(id);
 
         if (articleResult.status) {
             try {
@@ -76,7 +76,7 @@ class Article {
     }
 
     async modifyArticle (id, title, content) {
-        let article = await this.getArticleById(id);
+        const article = await this.getArticleById(id);
         let articleEditingInformation = {};
         if(article != undefined) {
             if(title != article.title) {

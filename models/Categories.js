@@ -7,10 +7,21 @@ class Categories {
         try {
             await database('categories').insert({nameCategory: nameCategory, date_publication: date_publication, slug: slug(nameCategory)});
             return ({status: true});
-        }  catch (erro) {
+        }  catch(erro) {
             return ({status: false, erro: erro})
         }
     }
+
+    async getAllCategories() {
+        try {
+            const categoriesResult = await database.select().from('categories');
+            return ({status: true, categories: categoriesResult});
+        } catch(erro) {
+            return ({status: false, erro: erro});
+        }
+    }
+
+    
 
 }
 

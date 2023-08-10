@@ -25,7 +25,7 @@ class ArticlesController {
             res.json({erro: "Unassigned category!"});
         }
 
-        let statusOperation = await Articles.setArticle(title, content, date, categories);
+        const statusOperation = await Articles.setArticle(title, content, date, categories);
 
         if (statusOperation.status){
             res.status(200);
@@ -38,7 +38,7 @@ class ArticlesController {
     }
 
     async findAllArticles(req, res) {
-        let articlesResult = await Articles.getAllArticles();
+        const articlesResult = await Articles.getAllArticles();
         
         if(articlesResult.articles != undefined) {
             res.status(200);
@@ -51,10 +51,10 @@ class ArticlesController {
     }
 
     async findArticle(req, res) {
-        let {title,id} = req.body;
+        const {title,id} = req.body;
 
         if (id != undefined) {
-            let articleResult = await Articles.getArticleById(id);
+            const articleResult = await Articles.getArticleById(id);
             if (articleResult.status) {
                 res.status(200);
                 res.send(articleResult.article);
@@ -63,7 +63,7 @@ class ArticlesController {
                 res.send("Error. Article not found!");
             }
         } else if (title != undefined) {
-            let articleResult = await Articles.getArticleByTitle(title);
+            const articleResult = await Articles.getArticleByTitle(title);
             if (articleResult.status) {
                 res.status(200);
                 res.send(articleResult.article);
@@ -79,8 +79,8 @@ class ArticlesController {
     }
 
     async deleteArticle(req, res) {
-        let id = req.body.id;
-        let statusOperation = await Articles.deleteArticle(id);
+        const id = req.body.id;
+        const statusOperation = await Articles.deleteArticle(id);
 
         if (statusOperation.status) {
             res.status(200);
@@ -93,8 +93,8 @@ class ArticlesController {
     }
 
     async editArticle(req,res) {
-        let {id, title, content} = req.body;
-        let statusOperation = await Articles.modifyArticle(id,title,content);
+        const {id, title, content} = req.body;
+        const statusOperation = await Articles.modifyArticle(id,title,content);
 
         if(statusOperation.status) {
             res.status(200);
