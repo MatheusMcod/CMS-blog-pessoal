@@ -7,7 +7,7 @@ const CategoriesController = require("../controllers/CategoriesController");
 
 router.get('/', HomeController.index);
 router.get('/articles', ArticlesController.findAllArticles);
-router.get('/article', ArticlesController.findArticle);
+router.get('/article/:id', ArticlesController.findArticleById);
 router.get('/categories', CategoriesController.findAllCategories);
 router.post('/article', ArticlesController.createArticle);
 router.post('/category', CategoriesController.createCategory);

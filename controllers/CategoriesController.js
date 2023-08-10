@@ -32,7 +32,7 @@ class categoriesController {
 
         if(categoriesResult.categories){
             res.status(200);
-            res.send(categoriesResult.categories)
+            res.json(categoriesResult.categories)
         } else {
             res.status(502);
             console.error(categoriesResult.erro);

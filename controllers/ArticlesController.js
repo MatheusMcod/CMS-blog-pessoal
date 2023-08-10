@@ -42,7 +42,7 @@ class ArticlesController {
         
         if(articlesResult.articles != undefined) {
             res.status(200);
-            res.send(articlesResult.articles);
+            res.json(articlesResult.articles);
         } else {
             res.status(502);
             console.error(articlesResult.erro);
@@ -50,31 +50,22 @@ class ArticlesController {
         }
     }
 
-    async findArticle(req, res) {
-        const {title,id} = req.body;
+    async findArticleById(req, res) {
+        let id = req.params.id;
+        let verificationId = parseInt(id, 10);
 
-        if (id != undefined) {
+        if (!isNaN(verificationId)) {
             const articleResult = await Articles.getArticleById(id);
             if (articleResult.status) {
                 res.status(200);
-                res.send(articleResult.article);
-            } else {
-                res.status(400);
-                res.send("Error. Article not found!");
-            }
-        } else if (title != undefined) {
-            const articleResult = await Articles.getArticleByTitle(title);
-            if (articleResult.status) {
-                res.status(200);
-                res.send(articleResult.article);
+                res.json(articleResult.article);
             } else {
                 res.status(400);
                 res.send("Error. Article not found!");
             }
         } else {
-            res.status(400);
-            console.error(articleResult.erro);
-            res.send("Error in search of article!");
+            res.status(406);
+            res.send("Error, parameter not acceptable!");
         }    
     }
 
