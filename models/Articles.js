@@ -36,9 +36,31 @@ class Article {
 
     async getArticleById(id) {
         try {
-            const articleResult = await database('articles').select('*').where('id_article', id);
+            const articleResult = await database('articlescategories').select([
+                'articles.id_article',
+                'articles.title',
+                'articles.content',
+                'articles.date_publication',
+                'categories.nameCategory'
+            ])
+            .innerJoin('articles','articlescategories.id_articles', 'articles.id_article')
+            .innerJoin('categories','articlescategories.id_categories', 'categories.id_category')
+            .where('articles.id_article', id);
+           
             if (articleResult != undefined) {
-                return ({status: true, article: articleResult});
+                const defaultDataPlacement = 0;
+                const treatmentResult = {
+                    id_article: articleResult[defaultDataPlacement].id_article,
+                    title: articleResult[defaultDataPlacement].title,
+                    content: articleResult[defaultDataPlacement].content,
+                    date_publication: articleResult[defaultDataPlacement].date_publication,
+                    categories: []
+                }
+                articleResult.forEach(article => {
+                    treatmentResult.categories.push(article.nameCategory);
+                });
+
+                return ({status: true, article: treatmentResult});
             } else {
                 return ({status: false});
             }
