@@ -70,17 +70,22 @@ class ArticlesController {
     }
 
     async deleteArticle(req, res) {
-        const id = req.body.id;
-        const statusOperation = await Articles.deleteArticle(id);
+        const id = req.params.id;
+        let verificationId = parseInt(id, 10);
 
-        if (statusOperation.status) {
-            res.status(200);
-            res.send("Successful!");
+        if (!isNaN(verificationId)) {
+            const articleResult = await Articles.deleteArticle(id);
+            if (articleResult.status) {
+                res.status(200);
+                res.send("Successful");
+            } else {
+                res.status(400);
+                res.send("Error. Article not found!");
+            }
         } else {
-            res.status(400);
-            console.error(statusOperation.erro);
-            res.send("Error deleting article! " + statusOperation.erro);
-        }
+            res.status(406);
+            res.send("Error, parameter not acceptable!");
+        }    
     }
 
     async editArticle(req,res) {

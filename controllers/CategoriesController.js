@@ -1,5 +1,6 @@
 const Articles = require("../models/Articles");
 const Categories = require("../models/Categories");
+const { deleteArticle } = require("./ArticlesController");
 
 class categoriesController {
 
@@ -22,7 +23,7 @@ class categoriesController {
             res.send("Successful!");
         } else {
             res.status(406);
-            console.error(statusOperation.erro)
+            console.error(statusOperation.erro);
             res.send("Error creating article!");
         }
     }
@@ -32,13 +33,56 @@ class categoriesController {
 
         if(categoriesResult.categories){
             res.status(200);
-            res.json(categoriesResult.categories)
+            res.json(categoriesResult.categories);
         } else {
             res.status(502);
             console.error(categoriesResult.erro);
             res.send("Error in search of articles!");
         }
     }
+
+    async findCategoryById(req, res) {
+        let id = req.params.id;
+        let verificationId = parseInt(id, 10);
+
+        if (!isNaN(verificationId)) {
+            const categoryResult = await Categories.getCategoryById(id);
+            if (categoryResult.status) {
+                res.status(200);
+                res.json(categoryResult.category);
+            } else {
+                res.status(400);
+                res.send("Error. Category not found!");
+            }
+        } else {
+            res.status(406);
+            res.send("Error, parameter not acceptable!");
+        }    
+    }
+
+    async deleteCategory(req, res) {
+        const id = req.params.id;
+        let verificationId = parseInt(id, 10);
+
+        if (!isNaN(verificationId)) {
+            const categoryResult = await Categories.deleteCategory(id);
+            if (categoryResult.status) {
+                res.status(200);
+                res.json("Successful!");
+            } else {
+                res.status(400);
+                res.send("Error. Category not found!");
+            }
+        } else {
+            res.status(406);
+            res.send("Error, parameter not acceptable!");
+        }    
+    }
+
+
+
+
+
 
 }
 

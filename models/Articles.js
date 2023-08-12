@@ -5,12 +5,12 @@ class Article {
 
     async setArticle(title, content, date, categories) {
         try {
-            await database.transaction(async trans => {
+            await database.transaction(async trx => {
 
-               const [id_article] = await database('articles').insert({title:title, content:content, date_publication:date, slug: slug(title)});
+               const [id_article] = await trx('articles').insert({title:title, content:content, date_publication:date, slug: slug(title)});
             
                let categoriesIds = categories.map(category => category.id);
-               await database('articlescategories').insert(categoriesIds.map(id_category => ({
+               await trx('articlescategories').insert(categoriesIds.map(id_category => ({
                     id_articles: id_article,
                     id_categories: id_category,
                     creation: date
@@ -27,8 +27,40 @@ class Article {
 
     async getAllArticles() {
         try {
-            const articles = await database.select().from('articles');
-            return ({status: true, articles: articles});
+            const articleResult = await database('articlescategories').select([
+                'articles.id_article',
+                'articles.title',
+                'articles.content',
+                'articles.date_publication',
+                'categories.nameCategory'
+            ])
+            .innerJoin('articles','articlescategories.id_articles', 'articles.id_article')
+            .innerJoin('categories','articlescategories.id_categories', 'categories.id_category');
+           
+            if (articleResult != undefined) {
+                const treatmentResult = articleResult.reduce((acc, article) => {
+                const existingTreatment = acc.find(treatment => treatment.id_article === article.id_article);
+                
+                    if (existingTreatment) {
+                      existingTreatment.categories.push(article.nameCategory);
+                    } else {
+                      const newTreatment = {
+                        id_article: article.id_article,
+                        title: article.title,
+                        content: article.content,
+                        date_publication: article.date_publication,
+                        categories: [article.nameCategory]
+                      };
+                      acc.push(newTreatment);
+                    }
+                  
+                    return acc;
+                }, []);
+
+                return ({status: true, articles: treatmentResult});
+            } else {
+                return ({status: false});
+            }
         } catch(erro) {
             return ({status: false, erro: erro});
         }
@@ -69,31 +101,22 @@ class Article {
         }
     }
 
-    async getArticleByTitle(title) {
-        try {
-            const articleResult = await database('articles').select('*').where('title', title);
-            if (articleResult != undefined) {
-                return ({status: true, article: articleResult});
-            } else {
-                return ({status: false});
-            }
-        } catch(erro) {
-            return ({status: false, erro: erro});
-        }
-    }
-
     async deleteArticle(id) {
-        const articleResult = this.getArticleById(id);
+        const articleResult = await this.getArticleById(id);
 
         if (articleResult.status) {
             try {
-                await database.delete().where('id_article', id).table('articles');
+                await database.transaction(async trx => {
+                    await trx.delete().where('id_articles', id).table('articlescategories');
+                    await trx.delete().where('id_article', id).table('articles');
+                });
+                
                 return ({status: true});
             } catch(erro) {
                 return ({status: false, erro: erro});
             }
         } else {
-            return ({status: false, erro: "Article not found!"})
+            return ({status: false, erro: "Article not found!"});
         }
     }
 
