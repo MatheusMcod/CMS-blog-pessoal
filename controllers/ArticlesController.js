@@ -89,8 +89,8 @@ class ArticlesController {
     }
 
     async editArticle(req,res) {
-        const {id, title, content} = req.body;
-        const statusOperation = await Articles.modifyArticle(id,title,content);
+        const {id, title, content, categories, date} = req.body;
+        const statusOperation = await Articles.modifyArticle(id,title,content,categories,date);
 
         if(statusOperation.status) {
             res.status(200);
@@ -98,7 +98,7 @@ class ArticlesController {
         } else {
             console.error(statusOperation.erro);
             res.status(406);
-            res.send("Error!" + statusOperation.erro);
+            res.send("Error! " + statusOperation.erro);
         }
     }
 

@@ -1,5 +1,6 @@
 const database = require("../database/connection");
 const slug = require("slugify");
+const lodash = require("lodash");
 
 class Article {
 
@@ -120,20 +121,41 @@ class Article {
         }
     }
 
-    async modifyArticle (id, title, content) {
-        const article = await this.getArticleById(id);
+    async modifyArticle (id, title, content, categories, date) {
+        const articleResult = await this.getArticleById(id);
         let articleEditingInformation = {};
-        if(article != undefined) {
-            if(title != article.title) {
+        if(articleResult != undefined) {
+
+            if(title != articleResult.article.title) {
                 articleEditingInformation.title = title;
+                articleEditingInformation.slug = slug(title);
             }
 
-            if(content != article.content) {
+            if(content != articleResult.article.content) {
                 articleEditingInformation.content = content;
             }
 
             try {
-                await database.update(articleEditingInformation).where('id_article', id).table('articles');
+                await database.transaction(async trx => {
+                    const idCategories = categories.map(category => category.id);
+                    
+                    if(Object.keys(articleEditingInformation).length != 0) {
+                         await trx('articles').update(articleEditingInformation).where('id_article', id);
+                    }
+                   
+                    if(idCategories.length != 0) {
+                        await trx('articlescategories').where('id_articles', id).whereIn('id_Categories', idCategories).del();
+
+                        await trx('articlescategories').insert(idCategories.map(categoryId => ({
+                                id_articles: id,
+                                id_categories: categoryId,
+                                creation: date
+                            }))
+                        );
+                    }   
+                });
+
+                
                 return ({status:true});
             } catch(erro) {
                 return ({status: false, erro: erro});
