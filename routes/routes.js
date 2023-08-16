@@ -13,6 +13,7 @@ router.get('/category/:id', CategoriesController.findCategoryById);
 router.post('/article', ArticlesController.createArticle);
 router.post('/category', CategoriesController.createCategory);
 router.put('/article', ArticlesController.editArticle);
+router.put('/category', CategoriesController.editCategory);
 router.delete('/article/:id', ArticlesController.deleteArticle);
 router.delete('/category/:id', CategoriesController.deleteCategory);
 

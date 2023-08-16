@@ -53,9 +53,27 @@ class Categories {
             return ({status: false, erro: "Category not found!"});
         }
         
-        
     }
+
+    async modifyCategory(id, nameCategory) {
+        const categoryResult = await this.getCategoryById(id);
+
+        if (Object.keys(categoryResult.category).length != 0) {
+            if (categoryResult.category != nameCategory) {
+                try {
+                    await database('categories').update({nameCategory: nameCategory, slug: slug(nameCategory)}).where('id_category', id);
     
+                    return ({status: true})
+                } catch(erro) {
+                    return({status: false, erro: erro})
+                }
+            } else {
+                return ({status: true})
+            } 
+        } else {
+            return ({status: false, erro: "Category not found!"});
+        }    
+    }
 
 }
 

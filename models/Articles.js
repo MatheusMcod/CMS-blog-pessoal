@@ -1,6 +1,5 @@
 const database = require("../database/connection");
 const slug = require("slugify");
-const lodash = require("lodash");
 
 class Article {
 
