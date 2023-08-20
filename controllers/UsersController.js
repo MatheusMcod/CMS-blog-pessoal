@@ -1,8 +1,8 @@
 const Users = require("../models/Users");
 
-class UserController {
+class UsersController {
     
-    async createArticle(req, res) {
+    async createUser(req, res) {
         const {name, email, password, role, date} = req.body;
 
         if (date == undefined || date == '' || date == ' ') {
@@ -37,5 +37,33 @@ class UserController {
         }
     }
 
+    async findAllUsers(req, res) {
+        const usersResult = await Users.getUsers();
+        
+        if(usersResult.article != undefined) {
+            res.status(200);
+            res.json(usersResult.article);
+        } else {
+            res.status(502);
+            console.error(articlesResult.erro);
+            res.send("Error in search of articles!");
+        }
+    }
 
+    async findUserById(req, res) {
+        const userId = req.params.id;
+        const usersResult = await Users.getUserById(userId);
+        
+        if(usersResult.article != undefined) {
+            res.status(200);
+            res.json(usersResult.article);
+        } else {
+            res.status(502);
+            console.error(articlesResult.erro);
+            res.send("Error in search of articles!");
+        }
+    }
+    
 }
+
+module.exports = new UsersController;
