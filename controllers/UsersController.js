@@ -63,6 +63,25 @@ class UsersController {
             res.send("Error in search of articles!");
         }
     }
+
+    async deleteUser(req, res) {
+        const id = req.params.id;
+        let verificationId = parseInt(id, 10);
+
+        if (!isNaN(verificationId)) {
+            const userResult = await Users.deleteUser(id);
+            if (userResult.status) {
+                res.status(200);
+                res.send("Successful");
+            } else {
+                res.status(400);
+                res.send("Error. Article not found!");
+            }
+        } else {
+            res.status(406);
+            res.send("Error, parameter not acceptable!");
+        }    
+    }
     
 }
 
