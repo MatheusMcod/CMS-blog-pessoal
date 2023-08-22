@@ -32,6 +32,16 @@ class Users {
         }
     }
 
+    async getUserByEmail(email) {
+        try {
+            const user = await database('users').select().where('email', email);
+        
+            return {status: true, user: user[0]};
+        } catch(erro) {
+            return {status: false, erro: erro};
+        }
+    }
+
     async deleteUser(id) {
         try {
             const article = await database('users').where('id_user', id).delete();

@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const router = express.Router();
 const HomeController = require("../controllers/HomeController");
@@ -16,6 +16,7 @@ router.get('/user/:id', UsersController.findUserById);
 router.post('/article', ArticlesController.createArticle);
 router.post('/category', CategoriesController.createCategory);
 router.post('/user', UsersController.createUser);
+router.post('/auth', UsersController.authUser)
 router.put('/article', ArticlesController.editArticle);
 router.put('/category', CategoriesController.editCategory);
 router.put('/user', UsersController.editUser);

@@ -1,4 +1,6 @@
 const Users = require("../models/Users");
+const jwt = require("jsonwebtoken");
+const secret = require("../middleware/jwtconfig").secret;
 
 class UsersController {
     
@@ -93,6 +95,33 @@ class UsersController {
             res.status(406);
             console.error(userResult.erro);
             res.send("Error in editing user! " + userResult.erro);
+        }
+    }
+
+    async authUser(req, res) {
+        let {email, password} = req.body;
+
+        if(email != undefined && password != undefined) {
+            const user = await Users.getUserByEmail(email);
+            console.log(user)
+            if(user.status && user.user.email == email && user.user.password == password) {
+                try{
+                    const token = await jwt.sign({id_user: user.user.id_user, email: user.user.email, role: user.user.role}, secret, {expiresIn: '48h'});
+                    res.status(200);
+                    res.json(token);
+                } catch(erro) {
+                    res.status(400);
+                    console.error(erro);
+                    res.send("Internal error!");
+                }
+            } else {
+                res.status(404);
+                res.send("Invalid Credentials!");
+            }
+
+        } else {
+            res.status(400);
+            res.send("Invalid Credentials!");
         }
     }
     
