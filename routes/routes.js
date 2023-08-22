@@ -18,7 +18,8 @@ router.post('/category', CategoriesController.createCategory);
 router.post('/user', UsersController.createUser);
 router.put('/article', ArticlesController.editArticle);
 router.put('/category', CategoriesController.editCategory);
-router.delete('/user/:id', UsersController.deleteUser)
+router.put('/user', UsersController.editUser);
+router.delete('/user/:id', UsersController.deleteUser);
 router.delete('/article/:id', ArticlesController.deleteArticle);
 router.delete('/category/:id', CategoriesController.deleteCategory);
 

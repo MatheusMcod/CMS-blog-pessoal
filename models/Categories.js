@@ -58,7 +58,7 @@ class Categories {
     async modifyCategory(id, nameCategory) {
         const categoryResult = await this.getCategoryById(id);
 
-        if (Object.keys(categoryResult.category).length != 0) {0
+        if (Object.keys(categoryResult.category).length != 0) {
             if (categoryResult.category != nameCategory) {
                 try {
                     await database('categories').update({nameCategory: nameCategory, slug: slug(nameCategory)}).where('id_category', id);

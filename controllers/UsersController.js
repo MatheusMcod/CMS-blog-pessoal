@@ -40,12 +40,12 @@ class UsersController {
     async findAllUsers(req, res) {
         const usersResult = await Users.getUsers();
         
-        if(usersResult.article != undefined) {
+        if(usersResult.user != undefined) {
             res.status(200);
-            res.json(usersResult.article);
+            res.json(usersResult.user);
         } else {
             res.status(502);
-            console.error(articlesResult.erro);
+            console.error(usersResult.erro);
             res.send("Error in search of articles!");
         }
     }
@@ -54,12 +54,12 @@ class UsersController {
         const userId = req.params.id;
         const usersResult = await Users.getUserById(userId);
         
-        if(usersResult.article != undefined) {
+        if(usersResult.user != undefined) {
             res.status(200);
-            res.json(usersResult.article);
+            res.json(usersResult.user);
         } else {
             res.status(502);
-            console.error(articlesResult.erro);
+            console.error(usersResult.erro);
             res.send("Error in search of articles!");
         }
     }
@@ -81,6 +81,19 @@ class UsersController {
             res.status(406);
             res.send("Error, parameter not acceptable!");
         }    
+    }
+
+    async editUser(req, res) {
+        let {id, name, role, email} = req.body;
+        let userResult = await Users.modifyUser(id, name, email, role);
+        if(userResult.status) {
+            res.status(200);
+            res.send("Successful!");
+        } else {
+            res.status(406);
+            console.error(userResult.erro);
+            res.send("Error in editing user! " + userResult.erro);
+        }
     }
     
 }
