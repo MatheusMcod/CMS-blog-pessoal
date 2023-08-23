@@ -35,7 +35,7 @@ class UsersController {
         } else {
             console.error(statusOperation.erro);
             res.status(406);
-            res.send("Error creating user!");
+            res.send("Error creating user! " + statusOperation.erro);
         }
     }
 
@@ -103,7 +103,7 @@ class UsersController {
 
         if(email != undefined && password != undefined) {
             const user = await Users.getUserByEmail(email);
-            
+
             if(user.status && user.user.email == email && user.user.password == password) {
                 try{
                     const token = await jwt.sign({id_user: user.user.id_user, email: user.user.email, role: user.user.role}, secret, {expiresIn: '48h'});

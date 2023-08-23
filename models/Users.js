@@ -1,12 +1,21 @@
 const database = require("../database/connection");
+const bcrypt = require("bcrypt");
 
 class Users {
 
     async setUser(name, email, password, role, date) {
         try {
-            await database('users').insert({name:name, email:email, password: password, role: role, date_creation:date});
+            const hash = await bcrypt.hash(password, 10);
+            const emailVerify = await this.getUserByEmail(email);
             
-            return {status: true};
+            if (emailVerify.user == undefined) {
+                await database('users').insert({name:name, email:email, password: hash, role: role, date_creation:date});
+
+                return {status: true};
+            } else {
+                return {status: false, erro: "Email already exists!"}
+            }
+            
         } catch(erro) {
             return {status: false, erro: erro};
         }
